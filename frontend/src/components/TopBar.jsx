@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, Bell, Moon, RefreshCw } from 'lucide-react';
+import { useCity } from '../context/CityContext';
 
 const pageTitles = {
   '/': 'Dashboard',
@@ -16,6 +17,7 @@ const pageTitles = {
 const TopBar = () => {
   const location = useLocation();
   const currentTitle = pageTitles[location.pathname] || 'Dashboard';
+  const { selectedCity, setSelectedCityByName, cityOptions, selectedArea, setSelectedArea, areaOptions } = useCity();
 
   return (
     <header className="topbar">
@@ -28,6 +30,34 @@ const TopBar = () => {
       </div>
 
       <div className="topbar-right">
+        <div className="topbar-city-select-wrap">
+          <label htmlFor="city-select" className="topbar-city-label">City</label>
+          <select
+            id="city-select"
+            className="topbar-city-select"
+            value={selectedCity.name}
+            onChange={(event) => setSelectedCityByName(event.target.value)}
+          >
+            {cityOptions.map((city) => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="topbar-city-select-wrap">
+          <label htmlFor="area-select" className="topbar-city-label">Area</label>
+          <select
+            id="area-select"
+            className="topbar-city-select"
+            value={selectedArea}
+            onChange={(event) => setSelectedArea(event.target.value)}
+          >
+            {areaOptions.map((area) => (
+              <option key={area} value={area}>{area}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="topbar-live">
           <span className="live-dot"></span>
           Live Data

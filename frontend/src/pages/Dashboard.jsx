@@ -12,15 +12,23 @@ import ChartCard from '../components/ChartCard';
 import KPIRing from '../components/KPIRing';
 import AlertItem from '../components/AlertItem';
 import CustomTooltip from '../components/CustomTooltip';
-import {
-  dashboardKPIs, trafficHourly, airQualityHistory,
-  energyBySource, transportRidership, alertsData,
-  aiInsights,
-} from '../data/mockData';
+import CitySearchMap from '../components/CitySearchMap';
+import { useCityData } from '../hooks/useCityData';
 
 const kpiIcons = [Leaf, Car, Zap, Bus, Droplets, Recycle];
 
 const Dashboard = () => {
+  const { cityName, areaName, data } = useCityData();
+  const {
+    dashboardKPIs,
+    trafficHourly,
+    airQualityHistory,
+    energyBySource,
+    transportRidership,
+    alertsData,
+    aiInsights,
+  } = data;
+
   return (
     <div className="page-content">
       {/* Hero Banner */}
@@ -33,8 +41,12 @@ const Dashboard = () => {
             Real-time Urban Intelligence
           </div>
           <h1>City Operations Dashboard</h1>
-          <p>Monitor and analyze urban infrastructure metrics across traffic, environment, energy, and public services in real-time.</p>
+          <p>Monitor and analyze urban infrastructure metrics for {cityName} — {areaName} across traffic, environment, energy, and public services in real-time.</p>
         </div>
+      </div>
+
+      <div className="mb-28">
+        <CitySearchMap />
       </div>
 
       {/* KPI Stats */}

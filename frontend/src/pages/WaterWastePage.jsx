@@ -7,18 +7,21 @@ import { Droplets, Gauge, Recycle, Waves, Trash2, AlertCircle } from 'lucide-rea
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
-import { waterOverview, waterConsumptionMonthly, wasteData, wasteCollectionZones } from '../data/mockData';
+import { useCityData } from '../hooks/useCityData';
 
 const wasteColors = ['#3b82f6', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6'];
 
 const WaterWastePage = () => {
+  const { cityName, areaName, data } = useCityData();
+  const { waterOverview, waterConsumptionMonthly, wasteData, wasteCollectionZones } = data;
+
   return (
     <div className="page-content">
       <div className="page-header">
         <div className="page-header-row">
           <div>
             <h1>💧 Water & Waste Management</h1>
-            <p>Monitor water consumption, quality, waste collection, and recycling metrics across all city zones.</p>
+            <p>Monitor water consumption, quality, waste collection, and recycling metrics across {cityName} — {areaName} zones.</p>
           </div>
         </div>
       </div>

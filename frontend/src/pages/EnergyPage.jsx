@@ -7,16 +7,19 @@ import { Zap, Battery, Sun, TrendingDown, Factory, Leaf } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
-import { energyOverview, energyBySource, energyConsumptionDaily, energyMonthly } from '../data/mockData';
+import { useCityData } from '../hooks/useCityData';
 
 const EnergyPage = () => {
+  const { cityName, areaName, data } = useCityData();
+  const { energyOverview, energyBySource, energyConsumptionDaily, energyMonthly } = data;
+
   return (
     <div className="page-content">
       <div className="page-header">
         <div className="page-header-row">
           <div>
             <h1>⚡ Energy Grid Management</h1>
-            <p>Monitor power generation, consumption patterns, and renewable energy integration.</p>
+            <p>Monitor power generation, consumption patterns, and renewable energy integration in {cityName} — {areaName}.</p>
           </div>
           <button className="btn btn-primary">
             <Zap size={16} />

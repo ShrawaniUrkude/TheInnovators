@@ -7,10 +7,12 @@ import { Bus, Train, Clock, Users, Gauge, Navigation } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
-import { transportOverview, transportRidership, transportRoutes } from '../data/mockData';
+import { useCityData } from '../hooks/useCityData';
 
 const TransportPage = () => {
   const [filterType, setFilterType] = useState('All');
+  const { cityName, areaName, data } = useCityData();
+  const { transportOverview, transportRidership, transportRoutes } = data;
 
   const filteredRoutes = filterType === 'All'
     ? transportRoutes
@@ -22,7 +24,7 @@ const TransportPage = () => {
         <div className="page-header-row">
           <div>
             <h1>🚌 Public Transit System</h1>
-            <p>Monitor ridership, route performance, and transit efficiency across bus, metro, and tram networks.</p>
+            <p>Monitor ridership, route performance, and transit efficiency in {cityName} — {areaName} across bus, metro, and tram networks.</p>
           </div>
         </div>
       </div>

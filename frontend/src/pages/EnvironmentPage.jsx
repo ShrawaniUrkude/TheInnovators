@@ -7,9 +7,12 @@ import { Leaf, Wind, Thermometer, Volume2, Cloud, Droplets } from 'lucide-react'
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
-import { airQualityData, airQualityHistory, noiseData, temperatureData } from '../data/mockData';
+import { useCityData } from '../hooks/useCityData';
 
 const EnvironmentPage = () => {
+  const { cityName, areaName, data } = useCityData();
+  const { airQualityData, airQualityHistory, noiseData, temperatureData } = data;
+
   const aqiColor = airQualityData.aqi <= 50 ? '#10b981' :
     airQualityData.aqi <= 100 ? '#f59e0b' :
     airQualityData.aqi <= 150 ? '#f97316' : '#f43f5e';
@@ -22,7 +25,7 @@ const EnvironmentPage = () => {
         <div className="hero-banner-content">
           <div className="hero-badge"><Leaf size={14} /> Environmental Monitoring</div>
           <h1>Environmental Analytics</h1>
-          <p>Comprehensive monitoring of air quality, noise levels, temperature, and environmental conditions.</p>
+          <p>Comprehensive monitoring of air quality, noise levels, temperature, and environmental conditions in {cityName} — {areaName}.</p>
         </div>
       </div>
 

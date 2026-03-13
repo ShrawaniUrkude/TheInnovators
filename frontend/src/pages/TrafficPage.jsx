@@ -7,10 +7,12 @@ import { Car, Gauge, AlertTriangle, Clock, MapPin } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
-import { trafficOverview, trafficHourly, trafficByZone, trafficIncidents } from '../data/mockData';
+import { useCityData } from '../hooks/useCityData';
 
 const TrafficPage = () => {
   const [timeFilter, setTimeFilter] = useState('24h');
+  const { cityName, areaName, data } = useCityData();
+  const { trafficOverview, trafficHourly, trafficByZone, trafficIncidents } = data;
 
   return (
     <div className="page-content">
@@ -20,7 +22,7 @@ const TrafficPage = () => {
         <div className="hero-banner-content">
           <div className="hero-badge"><Car size={14} /> Traffic Management</div>
           <h1>Traffic Flow Analytics</h1>
-          <p>Real-time traffic monitoring, congestion analysis, and incident management across the city network.</p>
+          <p>Real-time traffic monitoring, congestion analysis, and incident management across {cityName} — {areaName}.</p>
         </div>
       </div>
 

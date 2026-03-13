@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Car,
@@ -24,9 +24,6 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-  const location = useLocation();
-  let currentSection = '';
-
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -38,9 +35,9 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item) => {
-          const showSection = item.section !== currentSection;
-          if (showSection) currentSection = item.section;
+        {navItems.map((item, index) => {
+          const previousSection = index > 0 ? navItems[index - 1].section : null;
+          const showSection = item.section !== previousSection;
 
           return (
             <React.Fragment key={item.path}>

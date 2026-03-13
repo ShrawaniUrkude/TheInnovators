@@ -373,6 +373,37 @@ input, select, textarea {
   gap: 12px;
 }
 
+.topbar-city-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+}
+
+.topbar-city-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.topbar-city-select {
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.topbar-city-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
 .topbar-search {
   position: relative;
 }
@@ -657,6 +688,173 @@ input, select, textarea {
 
 .chart-container-lg {
   height: 380px;
+}
+
+/* ==========================================
+   CITY SEARCH MAP
+   ========================================== */
+
+.city-search-card {
+  padding-bottom: 20px;
+}
+
+.city-search-controls {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.city-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+}
+
+.city-input-wrap svg {
+  color: var(--text-muted);
+}
+
+.city-input-wrap input {
+  width: 100%;
+  height: 42px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.city-input-wrap input::placeholder {
+  color: var(--text-muted);
+}
+
+.city-search-btn,
+.city-voice-btn {
+  min-height: 42px;
+}
+
+.city-search-note,
+.city-search-error {
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+}
+
+.city-search-note {
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.12);
+  color: #93c5fd;
+}
+
+.city-search-error {
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  background: rgba(244, 63, 94, 0.1);
+  color: #fda4af;
+}
+
+.city-map-wrapper {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.india-city-map {
+  height: 360px;
+  width: 100%;
+}
+
+.leaflet-container {
+  background: #0f172a;
+}
+
+.city-search-result {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  border-top: 1px solid rgba(59, 130, 246, 0.12);
+  padding-top: 14px;
+}
+
+.city-search-result div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.city-result-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.city-search-result strong {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+/* Area selector inside CitySearchMap card */
+.city-area-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+.city-area-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.city-area-select {
+  flex: 1;
+  min-width: 160px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  appearance: auto;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.city-area-select:focus {
+  border-color: var(--accent-primary);
+}
+
+.city-area-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ==========================================
@@ -1462,6 +1660,19 @@ input, select, textarea {
   .topbar-search {
     display: none;
   }
+  .topbar-city-select-wrap {
+    display: none;
+  }
   .hero-banner { height: 180px; }
   .hero-banner-content h1 { font-size: 1.4rem; }
+  .city-search-controls {
+    grid-template-columns: 1fr;
+  }
+  .city-search-result {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .india-city-map {
+    height: 300px;
+  }
 }
