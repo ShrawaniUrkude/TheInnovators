@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap, CircleMarker, LayerGroup } from 'react-leaflet';
 import L from 'leaflet';
 import { LoaderCircle, MapPin, Mic, MicOff, Search } from 'lucide-react';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -7,6 +7,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import ChartCard from './ChartCard';
 import { useCity } from '../context/CityContext';
+import { useCityData } from '../hooks/useCityData';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -49,6 +50,45 @@ const areaIcon = L.divIcon({
   className: '',
 });
 
+const hashCode = (text) => {
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    hash = (hash << 5) - hash + text.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
+const congestionColor = (value) => {
+  if (value >= 75) return '#f43f5e';
+  if (value >= 60) return '#f59e0b';
+  if (value >= 40) return '#fbbf24';
+  return '#10b981';
+};
+
+const buildTrafficHeatPoints = (basePosition, zones) => {
+  if (!basePosition || !Array.isArray(zones) || zones.length === 0) return [];
+
+  const [baseLat, baseLng] = basePosition;
+  return zones.map((zone) => {
+    const seed = hashCode(zone.zone || '');
+    const angle = ((seed % 360) * Math.PI) / 180;
+    const distanceKm = 0.5 + (seed % 50) * 0.02; // up to ~1.5km
+    const offsetLat = (distanceKm / 110.574) * Math.cos(angle);
+    const offsetLng = (distanceKm / (111.320 * Math.cos((baseLat * Math.PI) / 180))) * Math.sin(angle);
+
+    return {
+      id: `${zone.zone}-${seed}`,
+      label: zone.zone,
+      lat: baseLat + offsetLat,
+      lng: baseLng + offsetLng,
+      value: zone.congestion,
+      color: congestionColor(zone.congestion),
+      radius: 350 + (zone.congestion / 100) * 650,
+    };
+  });
+};
+
 const RecenterMap = ({ position, zoom }) => {
   const map = useMap();
 
@@ -63,6 +103,7 @@ const RecenterMap = ({ position, zoom }) => {
 
 const CitySearchMap = () => {
   const { selectedCity, selectCity, areaOptions, selectedArea, setSelectedArea } = useCity();
+  const { data } = useCityData();
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -210,9 +251,18 @@ const CitySearchMap = () => {
     setIsListening(true);
   };
 
-  const cityPosition = selectedCity ? [selectedCity.lat, selectedCity.lng] : INDIA_CENTER;
-  const mapCenter = areaPosition ?? cityPosition;
+  const cityPosition = useMemo(
+    () => (selectedCity ? [selectedCity.lat, selectedCity.lng] : INDIA_CENTER),
+    [selectedCity],
+  );
+
+  const mapCenter = useMemo(() => (areaPosition ?? cityPosition), [areaPosition, cityPosition]);
   const mapZoom = areaPosition ? 14 : 10;
+
+  const heatPoints = useMemo(
+    () => buildTrafficHeatPoints(areaPosition ?? cityPosition, data?.trafficByZone ?? []),
+    [areaPosition, cityPosition, data?.trafficByZone],
+  );
 
   return (
     <ChartCard
@@ -286,6 +336,30 @@ const CitySearchMap = () => {
                 {selectedCity?.name}, {selectedCity?.state}
               </Popup>
             </Marker>
+          )}
+
+          {areaPosition && heatPoints.length > 0 && (
+            <LayerGroup>
+              {heatPoints.map((point) => (
+                <CircleMarker
+                  key={point.id}
+                  center={[point.lat, point.lng]}
+                  radius={12 + (point.value / 100) * 18}
+                  pathOptions={{
+                    color: point.color,
+                    fillColor: point.color,
+                    fillOpacity: 0.35,
+                    weight: 0,
+                  }}
+                >
+                  <Popup>
+                    <strong>{point.label}</strong>
+                    <br />
+                    Congestion: {point.value}%
+                  </Popup>
+                </CircleMarker>
+              ))}
+            </LayerGroup>
           )}
 
           <RecenterMap position={mapCenter} zoom={mapZoom} />

@@ -8,7 +8,6 @@ import {
   Bus,
   Droplets,
   BrainCircuit,
-  Settings,
   LogOut,
 } from 'lucide-react';
 
@@ -20,7 +19,6 @@ const navItems = [
   { label: 'Public Transit', path: '/transport', icon: Bus, section: 'Analytics' },
   { label: 'Water & Waste', path: '/water-waste', icon: Droplets, section: 'Analytics' },
   { label: 'AI Insights', path: '/analytics', icon: BrainCircuit, section: 'Intelligence' },
-  { label: 'Settings', path: '/settings', icon: Settings, section: 'System' },
 ];
 
 const Sidebar = () => {

@@ -9,7 +9,6 @@ import EnergyPage from './pages/EnergyPage';
 import TransportPage from './pages/TransportPage';
 import WaterWastePage from './pages/WaterWastePage';
 import AnalyticsPage from './pages/AnalyticsPage';
-import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -26,7 +25,6 @@ function App() {
             <Route path="/transport" element={<TransportPage />} />
             <Route path="/water-waste" element={<WaterWastePage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </main>
       </div>

@@ -182,6 +182,7 @@ const AnalyticsPage = () => {
             generatedAt: new Date().toISOString(),
             summary: `Automated analysis report for ${cityName} - ${areaName} with prioritized urban problem-solution insights.`,
             insights,
+            alerts: analyticsAlerts,
           },
         }),
       });
@@ -231,10 +232,6 @@ const AnalyticsPage = () => {
             <button className="btn btn-primary">
               <Sparkles size={16} />
               Run Analysis
-            </button>
-            <button className="btn btn-secondary">
-              <Target size={16} />
-              Custom Query
             </button>
           </div>
         </div>

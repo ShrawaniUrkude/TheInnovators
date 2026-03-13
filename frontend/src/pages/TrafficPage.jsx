@@ -1,18 +1,39 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { Car, Gauge, AlertTriangle, Clock, MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 import StatCard from '../components/StatCard';
 import ChartCard from '../components/ChartCard';
 import CustomTooltip from '../components/CustomTooltip';
 import { useCityData } from '../hooks/useCityData';
+import { useCity } from '../context/CityContext';
 
 const TrafficPage = () => {
   const [timeFilter, setTimeFilter] = useState('24h');
+  const { selectedCity } = useCity();
   const { cityName, areaName, data } = useCityData();
   const { trafficOverview, trafficHourly, trafficByZone, trafficIncidents } = data;
+
+  const suggestedRoad = useMemo(() => {
+    if (!selectedCity) return null;
+
+    const base = [selectedCity.lat, selectedCity.lng];
+    const offset = 0.015;
+
+    const start = [base[0] + offset, base[1] - offset];
+    const end = [base[0] - offset, base[1] + offset];
+
+    return {
+      name: 'Proposed connector road',
+      description: `Proposed new connector road to relieve congestion in ${areaName}.`,
+      positions: [start, end],
+      start,
+      end,
+    };
+  }, [selectedCity, areaName]);
 
   return (
     <div className="page-content">
@@ -84,6 +105,43 @@ const TrafficPage = () => {
           </div>
         </ChartCard>
       </div>
+
+      {suggestedRoad && (
+        <ChartCard title="Suggested New Road" subtitle="Proposed connector route to relieve congestion">
+          <div className="chart-container" style={{ height: '320px' }}>
+            <MapContainer
+              center={suggestedRoad.positions[0]}
+              zoom={13}
+              scrollWheelZoom={false}
+              style={{ width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Polyline
+                positions={suggestedRoad.positions}
+                pathOptions={{ color: '#f59e0b', weight: 6, opacity: 0.8 }}
+              />
+              <Marker position={suggestedRoad.start}>
+                <Popup>
+                  <strong>{suggestedRoad.name}</strong>
+                  <br />Start
+                </Popup>
+              </Marker>
+              <Marker position={suggestedRoad.end}>
+                <Popup>
+                  <strong>{suggestedRoad.name}</strong>
+                  <br />End
+                </Popup>
+              </Marker>
+            </MapContainer>
+            <div style={{ marginTop: '12px', padding: '0 12px', color: '#475569' }}>
+              {suggestedRoad.description}
+            </div>
+          </div>
+        </ChartCard>
+      )}
 
       {/* Zone Congestion */}
       <ChartCard title="Congestion by Zone" subtitle="Current traffic congestion levels across city zones" className="mb-28">

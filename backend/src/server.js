@@ -145,6 +145,25 @@ async function buildReportPdf(source, req) {
       });
     }
 
+    // Alerts section (optional)
+    const alerts = Array.isArray(source.alerts) ? source.alerts : [];
+    if (alerts.length) {
+      doc.addPage();
+      doc.fillColor('#111').fontSize(13).text('Alerts & Notifications');
+      doc.moveDown(0.5);
+
+      alerts.forEach((alert) => {
+        const title = alert.title || alert.type || 'Alert';
+        const category = alert.category ? ` (${alert.category})` : '';
+        const time = alert.time ? ` – ${alert.time}` : '';
+
+        doc.fillColor('#111').fontSize(11).text(`${title}${category}${time}`);
+        doc.moveDown(0.15);
+        doc.fillColor('#333').fontSize(10).text(alert.message || 'No details provided.', { lineGap: 3 });
+        doc.moveDown(0.4);
+      });
+    }
+
     doc.end();
     stream.on('finish', resolve);
     stream.on('error', reject);

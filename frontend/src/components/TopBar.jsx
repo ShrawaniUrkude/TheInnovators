@@ -11,7 +11,6 @@ const pageTitles = {
   '/transport': 'Public Transit',
   '/water-waste': 'Water & Waste',
   '/analytics': 'AI Insights',
-  '/settings': 'Settings',
 };
 
 const TopBar = () => {
